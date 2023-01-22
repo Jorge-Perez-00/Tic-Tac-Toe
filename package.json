@@ -1,7 +1,7 @@
 {
   "name": "tic-tac-toe",
   "version": "0.1.0",
-  "homepage": "https://jorge-perez-00.github.io/TicTacToe",
+  "homepage": "https://jorge-perez-00.github.io/Tic-Tac-Toe",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
