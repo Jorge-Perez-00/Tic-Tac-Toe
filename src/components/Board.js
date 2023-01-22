@@ -1,7 +1,11 @@
 
+import image_X from '../images/x_image.png'
+import image_O from '../images/o_image.png'
+
+
 function Board(props) {
 
-    let {board, boardClick} = props;
+    let {board, boardClick, gameMessage} = props;
 
     function transformBoard() {
         let copyBoard = [...board];
@@ -11,24 +15,23 @@ function Board(props) {
             newBoard.push(copyBoard.splice(0, 3));
         }
 
-        console.log(newBoard);
         return newBoard;
     }
 
     return (
-        <table className='board'>
-            <tbody>
-               {transformBoard().map((row, rowID) => 
-                    <tr key={rowID} >
-                        {row.map((value, cellID) => 
-                            <td onClick={boardClick} key={cellID} id={`c${rowID*3+cellID}`} className={value !== 'E' ? value : ""} >
-                                {value !== 'E' &&  <span className='boardSymbols' >{value}</span> }
-                            </td>
+        <div className='board'>
+                {transformBoard().map((row, rowID) =>
+                    <div key={rowID} className={"rows"}>
+                        {row.map((value, cellID) =>
+                            <div onClick={boardClick} key={cellID} id={`c${rowID * 3 + cellID}`} className={value !== 'E' ? "cells " + value : "cells"} >
+                                {value === 'X' && <img src={image_X} alt="X" className='boardSymbols' /> }
+                                {value === 'O' && <img src={image_O} alt="O" className='boardSymbols'/> }
+                            </div>
                         )}
-                    </tr>
-               )}
-            </tbody>
-        </table>
+                    </div>
+                )}
+            {gameMessage !== "" && <h1 className={`results ${gameMessage}`}>{gameMessage}</h1>}
+        </div> 
     )
 }
 

@@ -1,5 +1,4 @@
 
-
 function Scoreboard(props) {
 
     const {pScore, aScore} = props;

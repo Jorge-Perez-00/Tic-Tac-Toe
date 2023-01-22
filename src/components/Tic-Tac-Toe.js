@@ -7,6 +7,12 @@ import Board from './Board';
 import Scoreboard from './ScoreBoard';
 import Setup from './Setup';
 import Difficulty from './Difficulty';
+import image_X from '../images/x_image.png'
+import image_O from '../images/o_image.png'
+import image_Repeat from '../images/repeat.png'
+import image_Mode from '../images/mode.png'
+
+
 
 class TicTacToe extends Component {
     constructor(props) {
@@ -22,7 +28,8 @@ class TicTacToe extends Component {
             reset: false,
             playerScore: 0,
             agentScore: 0,
-            difficulty: '?'
+            difficulty: '?',
+            numberToggle: 0,
         }
     }
 
@@ -48,7 +55,6 @@ class TicTacToe extends Component {
     }
 
     parseData = (data, policyType) => {
-        console.log(policyType);
         let policy = {}
         
         for(let pair = 0; pair < data.length; pair++) {
@@ -83,9 +89,6 @@ class TicTacToe extends Component {
    
 
     agentsTurn(copyBoard){
-        console.log("HELLO I AM THE AGENT!")
-      
-
         let index;
         let max = -9999;
         let epsilon = 0;
@@ -149,14 +152,11 @@ class TicTacToe extends Component {
     //FUNCTION THAT CHECKS THE BOARD FOR A WINNER
     checkWinner(copyBoard) {        
         let board = copyBoard;
-        console.log(board);
 
         //CHECK ALL ROWS ON THE BOARD FOR A WINNER
         let row;
-        //console.log("ROWS:\n")
         for (let cell = 0; cell < 3; cell++) {
             row = board[cell * 3] + board[cell * 3 + 1] + board[cell*3 + 2];
-            //console.log(row)
             if(row === "XXX") {
                 return "X";
             }
@@ -168,10 +168,8 @@ class TicTacToe extends Component {
 
         //CHECK ALL COLUMNS ON THE BOARD FOR A WINNER
         let column;
-        //console.log("COLUMNS:\n")
         for(let cell = 0; cell < 3; cell++) {
             column = board[cell] + board[cell + 3] + board[cell + 6];
-            //console.log(column)
             if(column === "XXX") {
                 return "X";
             }
@@ -223,7 +221,7 @@ class TicTacToe extends Component {
         //Check for a winner after the player has made a turn.
         let checkOne = this.checkWinner(newBoard);
 
-        console.log("Player:", checkOne);
+        //console.log("Player:", checkOne);
 
         //----------------------AGENT---------------------------
       
@@ -237,7 +235,7 @@ class TicTacToe extends Component {
             newBoard = this.agentsTurn(newBoard);
 
             checkOne = this.checkWinner(newBoard);
-            console.log("Agent:", checkOne);
+            //console.log("Agent:", checkOne);
         }
 
 
@@ -259,6 +257,10 @@ class TicTacToe extends Component {
             endGameMessage = "Tie game!"
         }
 
+
+
+        //----------------------UPDATE UI---------------------------
+
         this.setState({
             board: newBoard,
             start: (winner !== "NONE" ? false : true),
@@ -268,57 +270,7 @@ class TicTacToe extends Component {
             agentScore: aScore,
         })
 
-        //----------------------UPDATE UI---------------------------
         
-        /*
-        if (winner === this.state.playerSymbol) {
-            let message = ["YOU WON !", "YOU WON ! EZ", "2EZ HUH?", "LMAO HOW DID YOU WIN ?"]
-            let rNumber = Math.floor(Math.random() * 4);
-            let winMessage = message[rNumber];
-
-            this.setState({
-                board: newBoard,
-                start: false,
-                reset: true,
-                message: winMessage,
-                playerScore: this.state.playerScore + 1
-            })
-        }
-        else if (winner === this.state.agentSymbol){
-            let message = ["YOU LOST !", "BRUH YOU'RE DOODOO", "TRASH LMAO", "YOU SUCK BRUH", "YOU LOST ? SMH", "DOOKIEEEE", ]
-            let rNumber = Math.floor(Math.random() * message.length);
-            let winMessage = message[rNumber];
-            
-            this.setState({
-                board: newBoard,
-                start: false,
-                reset: true,
-                message: winMessage,
-                agentScore: this.state.agentScore + 1
-            })
-        }
-        else if (winner === "Tie" && this.state.playerSymbol === 'X') {
-            this.setState({
-                board: newBoard,
-                start: false,
-                reset: true,
-                message: "TIE GAME!"
-            })
-        }
-        else if (winner === "Tie" && this.state.playerSymbol === 'O') {
-            this.setState({
-                board: newBoard,
-                start: false,
-                reset: true,
-                message: "TIE GAME!"
-            });
-        }
-        else{
-            this.setState({
-                board: newBoard,
-            });
-        }
-        */
 
     }
 
@@ -333,7 +285,8 @@ class TicTacToe extends Component {
         this.setState({
             board: ["E", "E", "E", "E", "E", "E", "E", "E", "E"],
             reset: false,
-            start: this.state.playerSymbol === 'X' ? true : false 
+            start: this.state.playerSymbol === 'X' ? true : false,
+            numberToggle: this.state.numberToggle === 0 ? 1 : 0, 
         })
     }
 
@@ -345,7 +298,6 @@ class TicTacToe extends Component {
         let cell = event.target.id.slice(1);
         cell = parseInt(cell, 10);
 
-        console.log(start)
         if(start && this.state.board[cell] === 'E') {
             this.playersTurn(cell);
         }
@@ -404,7 +356,6 @@ class TicTacToe extends Component {
         return(
             <div className='game'>
 
-                <h1 className='title'>Tic-Tac-Toe</h1>
                 <Setup playerSymbol={this.state.playerSymbol} agentSymbol={this.state.agentSymbol} difficulty={this.state.difficulty} chooseSymbol={this.chooseSymbol}/>
 
                 {(this.state.playerSymbol !== '' && this.state.agentSymbol !== '' && this.state.difficulty === '?') &&
@@ -414,14 +365,29 @@ class TicTacToe extends Component {
                     <div className='tictactoe'>
                         <Scoreboard pScore={this.state.playerScore} aScore={this.state.agentScore} />
                         
-                        <Board boardClick={this.boardClick} board={this.state.board} />
-                        {reset && <h1 className={`results ${this.state.message}`}>{this.state.message}</h1>}
-                        {message}
+                        <Board
+                            key={this.state.numberToggle} 
+                            boardClick={this.boardClick} 
+                            board={this.state.board} 
+                            gameMessage={reset ? this.state.message : ""} 
+                        
+                        />
+                         
+                        {/*message*/}
                         {startButton}
-                        {reset && <button onClick={this.changeTurns} className="end changeSymbolButton">Play as {this.state.agentSymbol}</button>}
-                        {reset && <button onClick={this.resetGame} className='end resetButton' >RESET</button>}
-                        {reset && <button onClick={this.changeDifficulty} className="end changeDifficultyButton" >Change Difficulty</button> }
-
+                        {reset &&
+                            <>
+                                <button title={'Play as ' + this.state.agentSymbol} onClick={this.changeTurns} className="end changeSymbolButton">
+                                    <img src={this.state.agentSymbol === "X" ? image_X : image_O} alt="player symbol" className='boardSymbols' /> </button>
+                                <button title="Restart game" onClick={this.resetGame} className='end resetButton' >
+                                    <img src={image_Repeat} alt="repeat" className='boardSymbols' />
+                                </button>
+                                <button title="Change mode/difficulty" onClick={this.changeDifficulty} className="end changeDifficultyButton" >
+                                    <img src={image_Mode} alt="mode" className='boardSymbols' />
+                                </button>
+                            </>
+                                
+                        }
                     </div>}
 
 
