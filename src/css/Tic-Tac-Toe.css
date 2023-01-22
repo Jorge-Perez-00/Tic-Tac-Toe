@@ -19,6 +19,8 @@
     background-color: none;
     margin: auto;
     margin-top: 1.5vmin;
+    margin-bottom: 0;
+    padding-bottom: 0;
 
     background-color: none;
     
@@ -302,6 +304,8 @@ h2 {
 }
 
 .scoreBoard {
+    display: flex;
+    padding: 0;
     margin-top: 0px;
     margin-bottom: 0px;
     margin: auto;
@@ -309,10 +313,8 @@ h2 {
     outline: .10vmin solid aliceblue;
     background-color: rgb(9, 17, 79);
     
-    /*height: 50px;
     
-    width: 710px;
-    */
+
     height: max-content;
     width: max-content;
    
@@ -322,7 +324,9 @@ h2 {
 .score {
     display: inline;
 
-    margin-top: 0;
+    padding: 0;
+    margin-top: 0px;
+    margin-bottom: 0px;
     margin-left: 2.5vmin;
     margin-right: 2.5vmin;
     font-size: 5vmin;
@@ -412,9 +416,8 @@ h2 {
 }
 
 .startButton {
-
     font-size: 8.5vmin;
-    margin-top: 2vmin;
+    margin-top: 1.5vmin;
 }
 
 .startButton:hover {
